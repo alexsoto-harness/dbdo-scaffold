@@ -1,9 +1,4 @@
-# Optional: create the namespace ahead of time if not already present
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: db-lab
----
+
 # DB1
 apiVersion: v1
 kind: Service
