@@ -171,7 +171,7 @@ resource "harness_platform_db_schema" "db1" {
   ] 
   name       = "db1"
   schema_source {
-    connector    = "gitConnector"
+    connector    = "hcr"
     repo         = "db_changes.git"
     location     = "changelog.yaml"
   }
