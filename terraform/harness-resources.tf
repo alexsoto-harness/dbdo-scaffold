@@ -114,7 +114,6 @@ resource "harness_platform_connector_jdbc" "db3" {
 
 resource "harness_platform_repo" "repo" {
   identifier     = "db_changes"
-  name           = "DB_Changes"
   org_id    = "default"  
   project_id = var.project_name
   depends_on = [
