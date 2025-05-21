@@ -122,7 +122,7 @@ resource "harness_platform_repo" "repo" {
   default_branch = "main"
   description    = ""
   source {
-    repo = "octocat/hello-worId"
+    repo = "chrisjws-harness/dbd-scaffold"
     type = "github"
   }
 }
