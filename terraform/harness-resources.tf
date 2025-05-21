@@ -20,6 +20,24 @@ resource "harness_platform_secret_text" "inline" {
   value                     = "secretpass"
 }
 
+resource "harness_platform_connector_jdbc" "db1" {
+  identifier         = "db1"
+  name               = "DB1"
+  depends_on = [
+    harness_platform_secret_text.inline,
+  ]
+  description        = ""
+  url                = "jdbc:postgresql://postgres-db1.{ var.namespace }.svc.cluster.local:5432/mydb"
+  # delegate_selectors = ["harness-delegate"]
+  credentials {
+    auth_type = "UsernamePassword"
+    username_password {
+      username     = "admin"
+      password_ref = "db1"
+    }
+  }
+}
+
 resource "harness_platform_secret_text" "inline2" {
   identifier  = "db2"
   name        = "db2"
