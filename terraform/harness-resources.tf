@@ -178,7 +178,7 @@ resource "harness_platform_db_schema" "db1" {
 }
 
 resource "harness_platform_db_instance" "db2" {
-  identifier  = "identifier"
+  identifier  = "db2"
   org_id     = "default"
   project_id = var.project_name
   name        = "DB2"
@@ -191,7 +191,7 @@ resource "harness_platform_db_instance" "db2" {
 }
 
 resource "harness_platform_db_instance" "db3" {
-  identifier  = "identifier"
+  identifier  = "db3"
   org_id     = "default"
   project_id = var.project_name
   name        = "DB3"
