@@ -3,3 +3,19 @@ resource "harness_platform_project" "project" {
     identifier = var.project_name  
     org_id    = "default"  
 }
+
+resource "harness_platform_secret_text" "inline" {
+  identifier  = "db1"
+  name        = "db1"
+  org_id    = "default"  
+  project_id = var.project_name
+  depends_on = [
+    harness_platform_project.project,
+  ]
+  description = "example"
+  tags        = ["foo:bar"]
+
+  secret_manager_identifier = "harnessSecretManager"
+  value_type                = "Inline"
+  value                     = "secretpass"
+}
