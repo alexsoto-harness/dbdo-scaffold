@@ -56,6 +56,26 @@ resource "harness_platform_secret_text" "inline2" {
   value                     = "secretpass"
 }
 
+resource "harness_platform_connector_jdbc" "db2" {
+  identifier         = "db2"
+  name               = "DB2"
+  org_id    = "default"  
+  project_id = var.project_name
+  depends_on = [
+    harness_platform_secret_text.inline2,
+  ]
+  description        = ""
+  url                = "jdbc:postgresql://postgres-db2.${var.namespace}.svc.cluster.local:5432/mydb"
+  # delegate_selectors = ["harness-delegate"]
+  credentials {
+    auth_type = "UsernamePassword"
+    username_password {
+      username     = "admin"
+      password_ref = "db2"
+    }
+  }
+}
+
 resource "harness_platform_secret_text" "inline3" {
   identifier  = "db3"
   name        = "db3"
@@ -70,4 +90,24 @@ resource "harness_platform_secret_text" "inline3" {
   secret_manager_identifier = "harnessSecretManager"
   value_type                = "Inline"
   value                     = "secretpass"
+}
+
+resource "harness_platform_connector_jdbc" "db1" {
+  identifier         = "db3"
+  name               = "DB3"
+  org_id    = "default"  
+  project_id = var.project_name
+  depends_on = [
+    harness_platform_secret_text.inline3,
+  ]
+  description        = ""
+  url                = "jdbc:postgresql://postgres-db3.${var.namespace}.svc.cluster.local:5432/mydb"
+  # delegate_selectors = ["harness-delegate"]
+  credentials {
+    auth_type = "UsernamePassword"
+    username_password {
+      username     = "admin"
+      password_ref = "db3"
+    }
+  }
 }
