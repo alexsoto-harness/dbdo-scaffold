@@ -19,3 +19,35 @@ resource "harness_platform_secret_text" "inline" {
   value_type                = "Inline"
   value                     = "secretpass"
 }
+
+resource "harness_platform_secret_text" "inline2" {
+  identifier  = "db2"
+  name        = "db2"
+  org_id    = "default"  
+  project_id = var.project_name
+  depends_on = [
+    harness_platform_project.project,
+  ]
+  description = "example"
+  tags        = ["foo:bar"]
+
+  secret_manager_identifier = "harnessSecretManager"
+  value_type                = "Inline"
+  value                     = "secretpass"
+}
+
+resource "harness_platform_secret_text" "inline3" {
+  identifier  = "db3"
+  name        = "db3"
+  org_id    = "default"  
+  project_id = var.project_name
+  depends_on = [
+    harness_platform_project.project,
+  ]
+  description = "example"
+  tags        = ["foo:bar"]
+
+  secret_manager_identifier = "harnessSecretManager"
+  value_type                = "Inline"
+  value                     = "secretpass"
+}
