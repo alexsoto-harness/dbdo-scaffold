@@ -169,7 +169,7 @@ resource "harness_platform_db_schema" "db1" {
   depends_on = [
     harness_platform_connector_git.test,
   ] 
-  name       = "db1"
+  name       = "DB"
   schema_source {
     connector    = "hcr"
     repo         = "db_changes.git"
