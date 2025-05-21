@@ -4,6 +4,22 @@ resource "harness_platform_project" "project" {
     org_id    = "default"  
 }
 
+resource "harness_platform_secret_text" "pl_key" {
+  identifier  = "key"
+  name        = "key"
+  org_id    = "default"  
+  project_id = var.project_name
+  depends_on = [
+    harness_platform_project.project,
+  ]
+  description = "example"
+  tags        = ["foo:bar"]
+
+  secret_manager_identifier = "harnessSecretManager"
+  value_type                = "Inline"
+  value                     = "${var.key}"
+}
+
 resource "harness_platform_secret_text" "inline" {
   identifier  = "db1"
   name        = "db1"
@@ -134,14 +150,14 @@ resource "harness_platform_connector_git" "test" {
   project_id = var.project_name
   description = ""
   depends_on = [
-    harness_platform_repo.repo,
+    harness_platform_secret_text.pl_key,
   ]
   url                = "https://git.harness.io/ifEKEGuIQQKy2ltl3Epatg/default/${var.project_name}/db_changes.git"
   connection_type    = "Git"
   credentials {
     http {
       username     = "chris.storz@harness.io"
-      password_ref = ${var.key}
+      password_ref = key
     }
   }
 }
