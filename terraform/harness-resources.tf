@@ -161,3 +161,18 @@ resource "harness_platform_connector_git" "test" {
     }
   }
 }
+
+resource "harness_platform_db_schema" "db1" {
+  identifier = "db1"
+  org_id     = "default"
+  project_id = var.project_name
+  depends_on = [
+    harness_platform_secret_text.pl_key,
+  ] 
+  name       = "db1"
+  schema_source {
+    connector    = "gitConnector"
+    # repo         = "TestRepo"
+    location     = "changelog.yaml"
+  }
+}
