@@ -183,7 +183,7 @@ resource "harness_platform_db_instance" "db1" {
   project_id = var.project_name
   name        = "DB1"
 
-  schema      = "asdfasdf"
+  schema      = "db1"
   branch      = "main"
   connector   = "db1"
 }
