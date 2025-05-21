@@ -4,4 +4,8 @@ variable "project_name" {
   default     = "test"
 }
 
-
+variable "namespace" {
+  description = "kubernetes namespace the dbs are running in"
+  type        = string
+  default     = "db-lab"
+}
