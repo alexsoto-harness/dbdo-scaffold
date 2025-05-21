@@ -111,3 +111,19 @@ resource "harness_platform_connector_jdbc" "db3" {
     }
   }
 }
+
+resource "harness_platform_repo" "repo" {
+  identifier     = "db_changes"
+  name           = "DB Changes"
+  org_id    = "default"  
+  project_id = var.project_name
+  depends_on = [
+    harness_platform_project.project,
+  ]
+  default_branch = "main"
+  description    = ""
+  source {
+    repo = "octocat/hello-worId"
+    type = "github"
+  }
+}
