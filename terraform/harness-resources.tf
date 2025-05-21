@@ -92,7 +92,7 @@ resource "harness_platform_secret_text" "inline3" {
   value                     = "secretpass"
 }
 
-resource "harness_platform_connector_jdbc" "db1" {
+resource "harness_platform_connector_jdbc" "db3" {
   identifier         = "db3"
   name               = "DB3"
   org_id    = "default"  
