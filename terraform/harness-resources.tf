@@ -152,8 +152,8 @@ resource "harness_platform_connector_git" "test" {
   depends_on = [
     harness_platform_secret_text.pl_key,
   ]
-  url                = "https://git.harness.io/ifEKEGuIQQKy2ltl3Epatg/default/${var.project_name}/db_changes.git"
-  connection_type    = "Repo"
+  url                = "https://git.harness.io/ifEKEGuIQQKy2ltl3Epatg/default/${var.project_name}/"
+  connection_type    = "Account"
   credentials {
     http {
       username     = "chris.storz@harness.io"
@@ -167,12 +167,12 @@ resource "harness_platform_db_schema" "db1" {
   org_id     = "default"
   project_id = var.project_name
   depends_on = [
-    harness_platform_secret_text.pl_key,
+    harness_platform_connector_git.test,
   ] 
   name       = "db1"
   schema_source {
     connector    = "gitConnector"
-    # repo         = "TestRepo"
+    repo         = "db_changes.git"
     location     = "changelog.yaml"
   }
 }
