@@ -29,7 +29,7 @@ resource "harness_platform_connector_jdbc" "db1" {
     harness_platform_secret_text.inline,
   ]
   description        = ""
-  url                = "jdbc:postgresql://postgres-db1.{ var.namespace }.svc.cluster.local:5432/mydb"
+  url                = "jdbc:postgresql://postgres-db1.${var.namespace}.svc.cluster.local:5432/mydb"
   # delegate_selectors = ["harness-delegate"]
   credentials {
     auth_type = "UsernamePassword"
