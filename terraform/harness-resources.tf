@@ -177,6 +177,19 @@ resource "harness_platform_db_schema" "db1" {
   }
 }
 
+resource "harness_platform_db_instance" "db1" {
+  identifier  = "db1"
+  org_id     = "default"
+  project_id = var.project_name
+  name        = "DB1"
+  depends_on = [
+    harness_platform_db_schema.db1,
+  ] 
+  schema      = "db1"
+  branch      = "main"
+  connector   = "db1"
+}
+
 resource "harness_platform_db_instance" "db2" {
   identifier  = "db2"
   org_id     = "default"
