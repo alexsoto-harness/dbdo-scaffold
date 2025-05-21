@@ -23,6 +23,8 @@ resource "harness_platform_secret_text" "inline" {
 resource "harness_platform_connector_jdbc" "db1" {
   identifier         = "db1"
   name               = "DB1"
+  org_id    = "default"  
+  project_id = var.project_name
   depends_on = [
     harness_platform_secret_text.inline,
   ]
