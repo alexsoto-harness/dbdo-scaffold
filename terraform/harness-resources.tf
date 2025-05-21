@@ -126,3 +126,22 @@ resource "harness_platform_repo" "repo" {
     type = "github"
   }
 }
+
+resource "harness_platform_connector_git" "test" {
+  identifier  = "hcr"
+  name        = "hcr"
+  org_id    = "default"  
+  project_id = var.project_name
+  description = ""
+  depends_on = [
+    harness_platform_repo.repo,
+  ]
+  url                = "https://git.harness.io/ifEKEGuIQQKy2ltl3Epatg/default/${var.project_name}/db_changes.git"
+  connection_type    = "Git"
+  credentials {
+    http {
+      username     = "chris.storz@harness.io"
+      password_ref = ${var.key}
+    }
+  }
+}
