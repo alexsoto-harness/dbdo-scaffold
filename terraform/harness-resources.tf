@@ -157,7 +157,7 @@ resource "harness_platform_connector_git" "test" {
   credentials {
     http {
       username     = "chris.storz@harness.io"
-      password_ref = key
+      password_ref = "key"
     }
   }
 }
