@@ -1,0 +1,26 @@
+// provider "google" {
+//   project = "sales-209522"
+//   region  = "us-central1"
+// }
+
+// data "google_container_cluster" "gke_cluster" {
+//   name     = "db-devops-workshop-development"
+//   location = "us-central1"
+// }
+
+// provider "kubernetes" {
+//   host                   = data.google_container_cluster.gke_cluster.endpoint
+//   token                  = data.google_client_config.default.access_token
+//   cluster_ca_certificate = base64decode(data.google_container_cluster.gke_cluster.master_auth[0].cluster_ca_certificate)
+// }
+
+// data "google_client_config" "default" {}
+
+// resource "null_resource" "apply_postgres" {
+//   provisioner "local-exec" {
+//     command = "kubectl apply -f ${path.module}/manifests/postgres-all.yaml -n db-lab"
+//     environment = {
+//       KUBECONFIG = "~/.kube/config"
+//     }
+//   }
+// }
