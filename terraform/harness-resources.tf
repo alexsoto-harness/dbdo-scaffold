@@ -181,7 +181,7 @@ resource "harness_platform_db_instance" "db1" {
   identifier  = "identifier"
   org_id     = "default"
   project_id = var.project_name
-  name        = DB1"
+  name        = "DB1"
 
   #schema      = "schema1"
   branch      = "main"
