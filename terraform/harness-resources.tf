@@ -153,7 +153,7 @@ resource "harness_platform_connector_git" "test" {
     harness_platform_secret_text.pl_key,
   ]
   url                = "https://git.harness.io/ifEKEGuIQQKy2ltl3Epatg/default/${var.project_name}/db_changes.git"
-  connection_type    = "Git"
+  connection_type    = "Repo"
   credentials {
     http {
       username     = "chris.storz@harness.io"
