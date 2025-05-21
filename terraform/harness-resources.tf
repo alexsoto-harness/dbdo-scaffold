@@ -177,13 +177,28 @@ resource "harness_platform_db_schema" "db1" {
   }
 }
 
-resource "harness_platform_db_instance" "db1" {
+resource "harness_platform_db_instance" "db2" {
   identifier  = "identifier"
   org_id     = "default"
   project_id = var.project_name
-  name        = "DB1"
-
+  name        = "DB2"
+  depends_on = [
+    harness_platform_db_schema.db1,
+  ] 
   schema      = "db1"
   branch      = "main"
-  connector   = "db1"
+  connector   = "db2"
+}
+
+resource "harness_platform_db_instance" "db3" {
+  identifier  = "identifier"
+  org_id     = "default"
+  project_id = var.project_name
+  name        = "DB3"
+  depends_on = [
+    harness_platform_db_schema.db1,
+  ] 
+  schema      = "db1"
+  branch      = "main"
+  connector   = "db3"
 }
