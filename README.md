@@ -1,4 +1,4 @@
-# dbd-workshop-setup
+# DBDevOps Workshop Setup
 
 
 ## Kubernetes Configuration
