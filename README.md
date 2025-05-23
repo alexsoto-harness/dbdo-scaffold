@@ -3,10 +3,12 @@
 
 ## Kubernetes Configuration
 
+_Pick a unique namespace per user_
+
 ```
-kubectl create namespace db-lab
-kubectl apply -n db-lab -f seed-data.yaml
-kubectl apply -n db-lab -f dbs.yaml
+kubectl create namespace userspace
+kubectl apply -n userspace -f seed-data.yaml
+kubectl apply -n userspace -f dbs.yaml
 ```
 
 ## Harness Configuration
