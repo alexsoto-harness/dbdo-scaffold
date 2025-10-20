@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:latest
+          image: postgres:16.10
           ports:
             - containerPort: 5432
               name: postgres
@@ -67,7 +67,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: init-schema
-          image: postgres:latest
+          image: postgres:16.10
           command:
             - sh
             - -c
@@ -119,7 +119,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:latest
+          image: postgres:16.10
           ports:
             - containerPort: 5432
               name: postgres
@@ -155,7 +155,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: init-schema
-          image: postgres:latest
+          image: postgres:16.10
           command:
             - sh
             - -c
@@ -207,7 +207,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:latest
+          image: postgres:16.10
           ports:
             - containerPort: 5432
               name: postgres
@@ -243,7 +243,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: init-schema
-          image: postgres:latest
+          image: postgres:16.10
           command:
             - sh
             - -c
