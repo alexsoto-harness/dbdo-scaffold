@@ -9,3 +9,9 @@ variable "namespace" {
   type        = string
   default     = "db-lab"
 }
+
+variable "organization" {
+  description = "Organization for the workshop"
+  type        = string
+  default     = "default"
+}
