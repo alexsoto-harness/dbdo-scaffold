@@ -20,5 +20,5 @@ export HARNESS_ACCOUNT=""
 export HARNESS_KEY=""
 
 terraform init
-terraform apply -auto-approve -var="key=$HARNESS_KEY" -var="account=$HARNESS_ACCOUNT" -var="project_name=username" -var="namespace=userspace"
+terraform apply -auto-approve -var="key=$HARNESS_KEY" -var="account=$HARNESS_ACCOUNT" -var="project_name=username" -var="namespace=userspace -var="organization=organization"
 ```
