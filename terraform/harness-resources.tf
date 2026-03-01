@@ -1,23 +1,23 @@
-resource "harness_platform_project" "project" {  
-    name      = var.project_name 
-    identifier = var.project_name  
-    org_id    = var.organization
+locals {
+  github_connector_ref = {
+    account = "account.${var.github_connector}"
+    org     = "org.${var.github_connector}"
+    project = var.github_connector
+  }
 }
 
-resource "harness_platform_secret_text" "pl_key" {
-  identifier  = "key"
-  name        = "key"
-  org_id    = var.organization
-  project_id = var.project_name
-  depends_on = [
-    harness_platform_project.project,
-  ]
-  description = "example"
-  tags        = ["foo:bar"]
+resource "harness_platform_organization" "org" {
+  count      = var.create_org ? 1 : 0
+  identifier = var.organization
+  name       = var.organization
+}
 
-  secret_manager_identifier = "harnessSecretManager"
-  value_type                = "Inline"
-  value                     = "${var.key}"
+resource "harness_platform_project" "project" {
+  count      = var.create_project ? 1 : 0
+  name       = var.project_name
+  identifier = var.project_name
+  org_id     = var.organization
+  depends_on = [harness_platform_organization.org]
 }
 
 resource "harness_platform_secret_text" "inline" {
@@ -27,6 +27,7 @@ resource "harness_platform_secret_text" "inline" {
   project_id = var.project_name
   depends_on = [
     harness_platform_project.project,
+    harness_platform_organization.org,
   ]
   description = "example"
   tags        = ["foo:bar"]
@@ -63,6 +64,7 @@ resource "harness_platform_secret_text" "inline2" {
   project_id = var.project_name
   depends_on = [
     harness_platform_project.project,
+    harness_platform_organization.org,
   ]
   description = "example"
   tags        = ["foo:bar"]
@@ -99,6 +101,7 @@ resource "harness_platform_secret_text" "inline3" {
   project_id = var.project_name
   depends_on = [
     harness_platform_project.project,
+    harness_platform_organization.org,
   ]
   description = "example"
   tags        = ["foo:bar"]
@@ -128,51 +131,18 @@ resource "harness_platform_connector_jdbc" "db3" {
   }
 }
 
-resource "harness_platform_repo" "repo" {
-  identifier     = "db_changes"
-  org_id    = var.organization
-  project_id = var.project_name
-  depends_on = [
-    harness_platform_project.project,
-  ]
-  default_branch = "main"
-  description    = ""
-  source {
-    repo = "chrisjws-harness/dbd-scaffold"
-    type = "github"
-  }
-}
-
-resource "harness_platform_connector_git" "test" {
-  identifier  = "hcr"
-  name        = "hcr"
-  org_id    = var.organization
-  project_id = var.project_name
-  description = ""
-  depends_on = [
-    harness_platform_secret_text.pl_key,
-  ]
-  url                = "https://git.harness.io/ifEKEGuIQQKy2ltl3Epatg/default/${var.project_name}/"
-  connection_type    = "Account"
-  credentials {
-    http {
-      username     = "chris.storz@harness.io"
-      password_ref = "key"
-    }
-  }
-}
 
 resource "harness_platform_db_schema" "db1" {
   identifier = "db1"
   org_id     = var.organization
   project_id = var.project_name
   depends_on = [
-    harness_platform_connector_git.test,
+    harness_platform_project.project,
   ] 
   name       = "DB"
   schema_source {
-    connector    = "hcr"
-    repo         = "db_changes.git"
+    connector    = local.github_connector_ref[var.github_connector_scope]
+    repo         = var.github_repo
     location     = "changelog.yaml"
   }
 }
