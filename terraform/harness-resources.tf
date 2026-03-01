@@ -47,7 +47,7 @@ resource "harness_platform_connector_jdbc" "db1" {
   ]
   description        = ""
   url                = "jdbc:postgresql://postgres-db1.${var.namespace}.svc.cluster.local:5432/mydb"
-  # delegate_selectors = ["harness-delegate"]
+  delegate_selectors = [var.delegate_selector]
   credentials {
     auth_type = "UsernamePassword"
     username_password {
@@ -84,7 +84,7 @@ resource "harness_platform_connector_jdbc" "db2" {
   ]
   description        = ""
   url                = "jdbc:postgresql://postgres-db2.${var.namespace}.svc.cluster.local:5432/mydb"
-  # delegate_selectors = ["harness-delegate"]
+  delegate_selectors = [var.delegate_selector]
   credentials {
     auth_type = "UsernamePassword"
     username_password {
@@ -121,7 +121,7 @@ resource "harness_platform_connector_jdbc" "db3" {
   ]
   description        = ""
   url                = "jdbc:postgresql://postgres-db3.${var.namespace}.svc.cluster.local:5432/mydb"
-  # delegate_selectors = ["harness-delegate"]
+  delegate_selectors = [var.delegate_selector]
   credentials {
     auth_type = "UsernamePassword"
     username_password {
@@ -154,6 +154,7 @@ resource "harness_platform_db_instance" "db1" {
   name        = "DB1"
   depends_on = [
     harness_platform_db_schema.db1,
+    harness_platform_connector_jdbc.db1,
   ] 
   schema      = "db1"
   branch      = "main"
@@ -167,6 +168,7 @@ resource "harness_platform_db_instance" "db2" {
   name        = "DB2"
   depends_on = [
     harness_platform_db_schema.db1,
+    harness_platform_connector_jdbc.db2,
   ] 
   schema      = "db1"
   branch      = "main"
@@ -180,6 +182,7 @@ resource "harness_platform_db_instance" "db3" {
   name        = "DB3"
   depends_on = [
     harness_platform_db_schema.db1,
+    harness_platform_connector_jdbc.db3,
   ] 
   schema      = "db1"
   branch      = "main"

@@ -51,6 +51,12 @@ variable "github_connector_scope" {
   }
 }
 
+variable "delegate_selector" {
+  description = "Harness delegate selector for JDBC connector routing"
+  type        = string
+  default     = "tr-pov-helm-delegate"
+}
+
 variable "k8s_connector" {
   description = "Identifier of the Kubernetes connector in Harness (used in lab step groups for containerized execution)"
   type        = string

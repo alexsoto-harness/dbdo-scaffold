@@ -4,3 +4,4 @@ dbdo-sample-init/
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
+*.tfvars
