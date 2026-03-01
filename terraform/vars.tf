@@ -29,9 +29,9 @@ variable "create_org" {
 }
 
 variable "github_repo" {
-  description = "GitHub repo for DB changelogs (org/repo format)"
+  description = "GitHub repo for DB changelogs. Use just the repo name (e.g. 'dbdo-sample') if your GitHub connector already includes the org/account URL. Use 'org/repo' format only if your connector points to github.com with no org prefix."
   type        = string
-  default     = "alexsoto-harness/dbdo-sample"
+  default     = "dbdo-sample"
 }
 
 variable "github_connector" {

@@ -1,5 +1,4 @@
 context.md
-dbdo-sample-init/
 .terraform/
 *.tfstate
 *.tfstate.backup

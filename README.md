@@ -121,11 +121,17 @@ All variables have sensible defaults. Override as needed:
 | `organization` | `default` | Harness org identifier |
 | `create_org` | `false` | Set `true` to create the org (set `false` to use an existing one) |
 | `namespace` | `db-lab` | Kubernetes namespace where the DBs are running |
-| `github_repo` | `alexsoto-harness/dbdo-sample` | GitHub repo containing the `changelog.yaml` |
+| `github_repo` | `dbdo-sample` | GitHub repo containing the `changelog.yaml` (see note below) |
 | `github_connector` | `Harness_Github` | Identifier of the GitHub connector in Harness |
 | `github_connector_scope` | `account` | Scope of the GitHub connector: `account`, `org`, or `project` |
 | `k8s_connector` | `harnesstrcluster` | Identifier of the Kubernetes connector in Harness (used in labs) |
 | `k8s_connector_scope` | `account` | Scope of the K8s connector: `account`, `org`, or `project` |
+
+> **⚠️ `github_repo` format depends on your GitHub connector configuration:**
+> - If your connector URL already includes the GitHub org (e.g., `https://github.com/alexsoto-harness`), use **just the repo name**: `dbdo-sample`
+> - If your connector URL points to bare `https://github.com` with no org, use **org/repo format**: `alexsoto-harness/dbdo-sample`
+>
+> Using the wrong format will result in a doubled path like `https://github.com/alexsoto-harness/alexsoto-harness/dbdo-sample` and the pipeline will fail to clone. Check your connector's URL in the Harness UI under **Connectors** to confirm.
 
 ### Example: Full Custom Apply
 

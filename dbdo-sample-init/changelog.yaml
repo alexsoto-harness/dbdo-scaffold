@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2026-03-01-add-vendor-active-flag
+      author: harness-lab
+      changes:
+        - addColumn:
+            tableName: vendors
+            columns:
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+      rollback:
+        - dropColumn:
+            tableName: vendors
+            columnName: is_active

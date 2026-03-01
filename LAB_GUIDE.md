@@ -41,19 +41,23 @@ You'll create a pipeline that applies a database changelog to a target database,
 
 ### Step 4: Enable Automatic Git-Based Deployment
 
-1. Navigate to your pipeline and click **Triggers** → **New Trigger**
-2. Choose **Harness** as the trigger type
-3. Name it `Update`
-4. Select the repository (`db_changes`) used in your DB Schema definition
-5. Select Event: **Push**
-6. Under **Conditions**:
-   - Set the branch name to `main`
+1. Navigate to your pipeline and click **Triggers** (top tab) → **+ New Trigger**
+2. Under **Webhook**, select **GitHub**
+3. Name it: `On Push`
+4. Under **Connector**, select your GitHub connector (`Harness_Github` at account scope)
+5. Set **Repository Name** to your changelog repo (e.g., `dbdo-sample`)
+6. Under **Event**, select **Push**
+7. Click **Continue**
+8. Under **Conditions**:
+   - Set **Branch Name** to `main`
    - Under **Changed Files**, enter `changelog.yaml`
-7. Click **Continue**, then **Create Trigger**
+9. Click **Continue** through the remaining steps, then **Create Trigger**
+
+> **Note:** If your GitHub connector uses a GitHub App or has webhook permissions, Harness will auto-register the webhook on GitHub. If it uses a PAT without webhook permissions, you may need to manually add the webhook URL (shown after trigger creation) to your GitHub repo under **Settings → Webhooks**.
 
 ### Step 5: Push a Changelog to Git
 
-1. Navigate to the **Code Repository** module (or your GitHub repo)
+1. In your local clone of the changelog repo (or edit directly on GitHub)
 2. Open `changelog.yaml`
 3. Add the following changeSet:
 
