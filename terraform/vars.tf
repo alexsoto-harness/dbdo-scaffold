@@ -50,3 +50,20 @@ variable "github_connector_scope" {
     error_message = "github_connector_scope must be one of: account, org, project."
   }
 }
+
+variable "k8s_connector" {
+  description = "Identifier of the Kubernetes connector in Harness (used in lab step groups for containerized execution)"
+  type        = string
+  default     = "harnesstrcluster"
+}
+
+variable "k8s_connector_scope" {
+  description = "Scope of the Kubernetes connector: account, org, or project"
+  type        = string
+  default     = "account"
+
+  validation {
+    condition     = contains(["account", "org", "project"], var.k8s_connector_scope)
+    error_message = "k8s_connector_scope must be one of: account, org, project."
+  }
+}
