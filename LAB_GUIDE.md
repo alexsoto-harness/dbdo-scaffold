@@ -278,8 +278,8 @@ You'll promote a database change through Dev → QA → Production using a singl
 ### Step 3: Clean Up and Run the Pipeline
 
 1. Click **Save** to finalize the multi-stage pipeline
-2. In Git, **remove** the breaking change from Lab 2 and the `DROP TABLE` change from Lab 3
-3. Commit to `main` to kick off the pipeline
+2. In Git, open `changelog.yaml` and **remove** any breaking changeSets from previous labs (e.g., `add-duplicate-column` from Lab 2 and the `DROP TABLE` changeSet from Lab 3)
+3. Commit and push to `main` to kick off the pipeline
 4. Observe the deployment through all 3 stages:
    - **Stage 1:** DB1 (Dev)
    - **Stage 2:** DB2 (QA)
