@@ -15,13 +15,17 @@ Before starting, ensure you have:
 5. **A GitHub connector** in Harness (can be at account, org, or project scope)
 6. **A GitHub repo** containing Flyway migration files (see [Migration Repo](#migration-repo))
 7. **A Harness API key** with project-admin permissions
-8. **Terraform** installed locally (tested with Harness provider `0.37.4`)
+8. **Terraform** installed locally (tested with Harness provider `0.41.4`)
 
 ---
 
 ## Migration Repo
 
-The workshop uses a separate GitHub repo to store Flyway migration files. This repo must contain a `flyway/migrations/` directory with versioned SQL files. A starter migration is provided in `dbdo-sample-init/migrations/` — push it to your migration repo before running Terraform.
+The workshop uses a separate GitHub repo to store Flyway migration files. This repo must contain:
+- `flyway/migrations/` — versioned SQL files
+- `flyway/flyway.toml` — Flyway configuration file
+
+A starter set is provided in `dbdo-sample-init/` (migrations + `flyway.toml`) — copy it into your migration repo under `flyway/` before running Terraform.
 
 ### Flyway File Naming Convention
 
@@ -108,7 +112,7 @@ terraform apply \
   -var="migration_type=flyway"
 ```
 
-> **Important:** The `migration_type=flyway` variable is required. It switches resource naming, JDBC URLs, and uses the Harness API to create the DB Schema with Flyway migration type (the Terraform provider does not natively support Flyway schema creation).
+> **Important:** The `migration_type=flyway` variable is required. It switches resource naming, JDBC URLs, and creates the DB Schema with Flyway migration type (including the path to `flyway.toml`).
 
 ### Terraform Variables
 
@@ -137,7 +141,7 @@ All variables have sensible defaults. Override as needed:
 - **Harness Project** (optional — only if `create_project=true`)
 - **3 Secrets** (`flyway_db1`, `flyway_db2`, `flyway_db3`) — PostgreSQL passwords
 - **3 JDBC Connectors** (`Flyway DB1`, `Flyway DB2`, `Flyway DB3`) — pointing to each Flyway database in the cluster
-- **1 DB Schema** (`Flyway DB`) — created via Harness API with Flyway migration type, linked to the migration repo
+- **1 DB Schema** (`Flyway DB`) — Flyway migration type, linked to the migration repo (`flyway/migrations` + `flyway/flyway.toml`)
 - **3 DB Instances** (`Flyway DB1`, `Flyway DB2`, `Flyway DB3`) — each linked to the schema and its JDBC connector
 
 ---
@@ -172,5 +176,3 @@ terraform destroy \
 # Remove Kubernetes resources
 kubectl delete namespace <NAMESPACE>
 ```
-
-> **Note:** The Flyway DB Schema created via the Harness API is not tracked by Terraform state. You may need to delete it manually in the Harness UI under **DB DevOps → Schemas**.

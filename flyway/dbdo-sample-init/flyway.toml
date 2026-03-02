@@ -1,0 +1,6 @@
+[flyway]
+locations = ["filesystem:migrations"]
+defaultSchema = "public"
+validateMigrationNaming = true
+cleanDisabled = true
+baselineOnMigrate = true
