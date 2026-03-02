@@ -50,7 +50,7 @@ You'll create a pipeline that applies a database changelog to a target database,
 7. Click **Continue**
 8. Under **Conditions**:
    - Set **Branch Name** to `main`
-   - Under **Changed Files**, enter `changelog.yaml`
+   - Under **Changed Files**, enter `liquibase/changelog.yaml`
 9. Click **Continue** through the remaining steps, then **Create Trigger**
 
 > **Note:** If your GitHub connector uses a GitHub App or has webhook permissions, Harness will auto-register the webhook on GitHub. If it uses a PAT without webhook permissions, you may need to manually add the webhook URL (shown after trigger creation) to your GitHub repo under **Settings → Webhooks**.
@@ -58,7 +58,7 @@ You'll create a pipeline that applies a database changelog to a target database,
 ### Step 5: Push a Changelog to Git
 
 1. In your local clone of the changelog repo (or edit directly on GitHub)
-2. Open `changelog.yaml`
+2. Open `liquibase/changelog.yaml`
 3. Add the following changeSet:
 
 ```yaml
@@ -278,7 +278,7 @@ You'll promote a database change through Dev → QA → Production using a singl
 ### Step 3: Clean Up and Run the Pipeline
 
 1. Click **Save** to finalize the multi-stage pipeline
-2. In Git, open `changelog.yaml` and **remove** any breaking changeSets from previous labs (e.g., `add-duplicate-column` from Lab 2 and the `DROP TABLE` changeSet from Lab 3)
+2. In Git, open `liquibase/changelog.yaml` and **remove** any breaking changeSets from previous labs (e.g., `add-duplicate-column` from Lab 2 and the `DROP TABLE` changeSet from Lab 3)
 3. Commit and push to `main` to kick off the pipeline
 4. Observe the deployment through all 3 stages:
    - **Stage 1:** DB1 (Dev)

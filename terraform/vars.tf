@@ -73,3 +73,14 @@ variable "k8s_connector_scope" {
     error_message = "k8s_connector_scope must be one of: account, org, project."
   }
 }
+
+variable "migration_type" {
+  description = "Database migration tool: liquibase or flyway"
+  type        = string
+  default     = "liquibase"
+
+  validation {
+    condition     = contains(["liquibase", "flyway"], var.migration_type)
+    error_message = "migration_type must be one of: liquibase, flyway."
+  }
+}
