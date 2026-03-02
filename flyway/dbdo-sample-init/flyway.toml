@@ -4,3 +4,4 @@ defaultSchema = "public"
 validateMigrationNaming = true
 cleanDisabled = true
 baselineOnMigrate = true
+baselineVersion = "0"
