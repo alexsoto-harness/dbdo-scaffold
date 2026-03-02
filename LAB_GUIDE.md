@@ -103,7 +103,7 @@ You'll intentionally deploy a breaking change. The pipeline detects the failure 
 4. In the step configuration:
    - **DB Schema:** `DB`
    - **Database Instance:** `DB1`
-   - **Rollback Count:** `1`
+   - **Rollback Tag:** `<+execution.steps.DB.steps.Apply_Change.output.preStartTag>`
 5. Add a **Conditional Execution**:
    - Navigate to the **Advanced** tab
    - Click **Conditional Execution**
