@@ -32,8 +32,6 @@ You'll create a pipeline that applies a Flyway migration to a target database, s
    - **Migration Type:** `Flyway`
 4. Click **Apply Changes**
 
-> **Key Difference from Liquibase:** You must select **Flyway** as the Migration Type. Harness will look for versioned SQL migration files (`V<version>__<description>.sql`) in the configured migrations directory instead of a Liquibase changelog.
-
 ### Step 3: Save and Test the Pipeline
 
 1. Click **Save** to finalize the pipeline

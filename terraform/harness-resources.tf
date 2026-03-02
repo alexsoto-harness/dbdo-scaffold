@@ -138,46 +138,36 @@ resource "harness_platform_connector_jdbc" "db3" {
 }
 
 
-# Liquibase: create schema via Terraform provider
-resource "harness_platform_db_schema" "db1" {
-  count      = local.is_flyway ? 0 : 1
-  identifier = "db1"
-  org_id     = var.organization
-  project_id = var.project_name
-  depends_on = [
-    harness_platform_project.project,
-  ] 
-  name       = "DB"
+resource "harness_platform_db_schema" "liquibase" {
+  count          = local.is_flyway ? 0 : 1
+  identifier     = "db1"
+  org_id         = var.organization
+  project_id     = var.project_name
+  depends_on     = [harness_platform_project.project]
+  name           = "DB"
+  type           = "Repository"
+  migration_type = "Liquibase"
   schema_source {
-    connector    = local.github_connector_ref[var.github_connector_scope]
-    repo         = var.github_repo
-    location     = "liquibase/changelog.yaml"
+    connector = local.github_connector_ref[var.github_connector_scope]
+    repo      = var.github_repo
+    location  = "liquibase/changelog.yaml"
   }
 }
 
-# Flyway: create schema via Harness API (TF provider doesn't support migrationType)
-resource "null_resource" "flyway_schema" {
-  count = local.is_flyway ? 1 : 0
-  triggers = {
-    schema_id = local.schema_id
-  }
-  provisioner "local-exec" {
-    command = <<-EOT
-      STATUS=$(curl -s -o /dev/null -w "%%{http_code}" \
-        "https://app.harness.io/v1/orgs/${var.organization}/projects/${var.project_name}/dbschema/${local.schema_id}" \
-        -H "x-api-key: ${var.key}" \
-        -H "Harness-Account: ${var.account}")
-      if [ "$STATUS" = "200" ]; then
-        echo "Schema ${local.schema_id} already exists, skipping."
-      else
-        curl -s -X POST \
-          "https://app.harness.io/v1/orgs/${var.organization}/projects/${var.project_name}/dbschema" \
-          -H "x-api-key: ${var.key}" \
-          -H "Harness-Account: ${var.account}" \
-          -H "Content-Type: application/json" \
-          -d '{"identifier":"${local.schema_id}","migrationType":"Flyway","name":"${local.schema_name}","type":"Repository","changelog":{"connector":"${local.github_connector_ref[var.github_connector_scope]}","repo":"${var.github_repo}","location":"flyway/migrations","toml":"flyway/flyway.toml"}}'
-      fi
-    EOT
+resource "harness_platform_db_schema" "flyway" {
+  count          = local.is_flyway ? 1 : 0
+  identifier     = "flyway_db"
+  org_id         = var.organization
+  project_id     = var.project_name
+  depends_on     = [harness_platform_project.project]
+  name           = "Flyway DB"
+  type           = "Repository"
+  migration_type = "Flyway"
+  schema_source {
+    connector = local.github_connector_ref[var.github_connector_scope]
+    repo      = var.github_repo
+    location  = "flyway/migrations"
+    toml      = "flyway/flyway.toml"
   }
 }
 
@@ -187,8 +177,8 @@ resource "harness_platform_db_instance" "db1" {
   project_id = var.project_name
   name        = "${local.name_prefix}DB1"
   depends_on = [
-    harness_platform_db_schema.db1,
-    null_resource.flyway_schema,
+    harness_platform_db_schema.liquibase,
+    harness_platform_db_schema.flyway,
     harness_platform_connector_jdbc.db1,
   ] 
   schema      = local.schema_id
@@ -202,8 +192,8 @@ resource "harness_platform_db_instance" "db2" {
   project_id = var.project_name
   name        = "${local.name_prefix}DB2"
   depends_on = [
-    harness_platform_db_schema.db1,
-    null_resource.flyway_schema,
+    harness_platform_db_schema.liquibase,
+    harness_platform_db_schema.flyway,
     harness_platform_connector_jdbc.db2,
   ] 
   schema      = local.schema_id
@@ -217,8 +207,8 @@ resource "harness_platform_db_instance" "db3" {
   project_id = var.project_name
   name        = "${local.name_prefix}DB3"
   depends_on = [
-    harness_platform_db_schema.db1,
-    null_resource.flyway_schema,
+    harness_platform_db_schema.liquibase,
+    harness_platform_db_schema.flyway,
     harness_platform_connector_jdbc.db3,
   ] 
   schema      = local.schema_id
