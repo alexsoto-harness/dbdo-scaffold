@@ -30,9 +30,7 @@ You'll create a pipeline that applies a Flyway migration to a target database, s
    - **Migration Type:** `Flyway`
    - **Schema:** `Flyway DB`
    - **Database Instance:** `Flyway DB1`
-4. Expand **Container Configuration** and set **Container Registry** to your Docker Hub connector (e.g., `Harness Docker` at account scope)
-
-   > **Why?** The default Harness GAR registry does not yet include the Flyway plugin image. Setting a Docker Hub connector ensures the `drone-flyway` image is pulled from Docker Hub where it is published.
+4. Expand **Container Configuration** and set **Container Registry** to the `Harness Docker` connectorat account scope
 
 5. Click **Apply Changes**
 
@@ -55,7 +53,7 @@ You'll create a pipeline that applies a Flyway migration to a target database, s
 7. Click **Continue**
 8. Under **Conditions**:
    - Set **Branch Name** to `main`
-   - Under **Changed Files**, enter `flyway/migrations/`
+   - Under **Changed Files**, enter `flyway/migrations/.*` with a `Regex` Operator
 9. Click **Continue** through the remaining steps, then **Create Trigger**
 
 > **Note:** If your GitHub connector uses a GitHub App or has webhook permissions, Harness will auto-register the webhook on GitHub. If it uses a PAT without webhook permissions, you may need to manually add the webhook URL (shown after trigger creation) to your GitHub repo under **Settings → Webhooks**.
