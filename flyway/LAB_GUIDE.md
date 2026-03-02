@@ -27,10 +27,14 @@ You'll create a pipeline that applies a Flyway migration to a target database, s
 1. Inside your stage, click **Add Step**
 2. Search for and select **Apply Schema** (under DB DevOps), name it `Apply Change`
 3. In the step configuration:
+   - **Migration Type:** `Flyway`
    - **Schema:** `Flyway DB`
    - **Database Instance:** `Flyway DB1`
-   - **Migration Type:** `Flyway`
-4. Click **Apply Changes**
+4. Expand **Container Configuration** and set **Container Registry** to your Docker Hub connector (e.g., `Harness Docker` at account scope)
+
+   > **Why?** The default Harness GAR registry does not yet include the Flyway plugin image. Setting a Docker Hub connector ensures the `drone-flyway` image is pulled from Docker Hub where it is published.
+
+5. Click **Apply Changes**
 
 ### Step 3: Save and Test the Pipeline
 
@@ -252,10 +256,11 @@ You'll promote a database change through Dev → QA → Production using a singl
 4. Click **Add Step** → **Apply Schema** (under DB DevOps)
 5. Name the step: `Deploy Database Schema - QA`
 6. Configuration:
+   - **Migration Type:** `Flyway`
    - **Schema:** `Flyway DB`
    - **Database Instance:** `Flyway DB2`
-   - **Migration Type:** `Flyway`
-7. Click **Apply Changes**
+7. Set **Container Registry** to your Docker Hub connector (same as Lab 1)
+8. Click **Apply Changes**
 
 ### Step 2: Add Production Stage (Flyway DB3)
 
@@ -265,10 +270,11 @@ You'll promote a database change through Dev → QA → Production using a singl
 4. Click **Add Step** → **Apply Schema**
 5. Name the step: `Deploy Database Schema - Prod`
 6. Configuration:
+   - **Migration Type:** `Flyway`
    - **Schema:** `Flyway DB`
    - **Database Instance:** `Flyway DB3`
-   - **Migration Type:** `Flyway`
-7. Click **Apply Changes**
+7. Set **Container Registry** to your Docker Hub connector (same as Lab 1)
+8. Click **Apply Changes**
 
 ### Step 3: Clean Up and Run the Pipeline
 
