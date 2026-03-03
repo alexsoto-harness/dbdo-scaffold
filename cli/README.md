@@ -73,8 +73,8 @@ cli/
 - Command:
 ```bash
 flyway info \
-  -configFiles=cli/flyway.toml \
-  -locations="filesystem:cli/migrations" \
+  -configFiles=/harness/dbdo-sample/cli/flyway.toml \
+  -locations="filesystem:/harness/dbdo-sample/cli/migrations" \
   -password=secretpass
 ```
 
@@ -84,8 +84,8 @@ flyway info \
 - Command:
 ```bash
 flyway migrate \
-  -configFiles=cli/flyway.toml \
-  -locations="filesystem:cli/migrations" \
+  -configFiles=/harness/dbdo-sample/cli/flyway.toml \
+  -locations="filesystem:/harness/dbdo-sample/cli/migrations" \
   -password=secretpass
 ```
 
