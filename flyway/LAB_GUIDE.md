@@ -27,10 +27,10 @@ You'll create a pipeline that applies a Flyway migration to a target database, s
 1. Inside your stage, click **Add Step**
 2. Search for and select **Apply Schema** (under DB DevOps), name it `Apply Change`
 3. In the step configuration:
+   - **Container Registry:** `Harness Docker`
    - **Migration Type:** `Flyway`
    - **Schema:** `Flyway DB`
    - **Database Instance:** `Flyway DB1`
-4. Expand **Container Configuration** and set **Container Registry** to the `Harness Docker` connectorat account scope
 
 5. Click **Apply Changes**
 
@@ -94,22 +94,24 @@ ALTER TABLE users DROP COLUMN second_email;
 
 You'll intentionally deploy a breaking change. The pipeline detects the failure and automatically triggers a rollback using Flyway's undo migration — no manual intervention required.
 
-### Step 1: Add a Rollback Step
+### Step 1: Add a Rollback Step Group
 
-1. Navigate to your pipeline and locate the step group containing the **Apply Schema** step
-2. Hover on the line after the apply step and click the **+** icon to add a new step to the right
-3. Search for **Rollback Schema** and select it
-4. In the step configuration:
+1. In your pipeline stage, click **Add Step Group**
+2. Name it `Rollback`, enable **Containerized Execution**
+3. Select your Kubernetes cluster connector (same as the `DB` step group)
+4. Inside the `Rollback` step group, click **Add Step**
+5. Search for **Rollback Schema** and select it
+6. In the step configuration:
+   - **Container Registry:** `Harness Docker`
    - **DB Schema:** `Flyway DB`
    - **Database Instance:** `Flyway DB1`
    - **Rollback Tag:** `<+execution.steps.DB.steps.Apply_Change.output.preStartTag>`
-5. Add a **Conditional Execution**:
+7. Add a **Conditional Execution**:
    - Navigate to the **Advanced** tab
    - Click **Conditional Execution**
-   - Choose **If the previous step fails**
-6. Click **Apply Changes**, then **Save** the pipeline
-
-> **Why `preStartTag` instead of `Rollback Count`?** The Apply Schema step automatically tags the database state *before* applying any changes. The `preStartTag` output captures that tag. Using it in the Rollback step ensures we only revert changes made in the current run — never touching previous successful deployments. `Rollback Count: 1` is simpler but can accidentally roll back a change from a prior run if the current run applied multiple migrations before failing.
+   - Check the box for **And execute this step only if the following JEXL Condition evaluates to true**
+   - Enter: `<+execution.steps.DB.steps.Apply_Change.status> == "FAILED"`
+8. Click **Apply Changes**, then **Save** the pipeline
 
 ### Step 2: Push a Breaking Change to Git
 
@@ -121,26 +123,20 @@ Create a migration that attempts an invalid change (adding a column that already
 ALTER TABLE users ADD COLUMN id INT;
 ```
 
-2. Create `flyway/migrations/U3__undo_add_duplicate_id_column.sql`:
-
-```sql
-ALTER TABLE users DROP COLUMN id;
-```
-
-3. Commit and push to `main`
+2. Commit and push to `main`
 
 ### What Happens
 
 1. The pipeline triggers automatically
-2. The Apply Schema step tags the database, then attempts to apply the breaking migration
-3. The apply **fails** — the rollback step executes automatically
-4. The rollback reverts to the `preStartTag`, restoring the database to its pre-deployment state
+2. The Apply Schema step attempts to apply V3 — it **fails** because the `id` column already exists
+3. Harness automatically adds a **Repair Migrations** step that runs `flyway repair` to clean up any failed entries in `flyway_schema_history`
+4. The Rollback Schema step executes (conditional on failure), reverting to the `preStartTag`
 
 ### Value Callouts
 
-- **Automatic Rollbacks** — undo migrations are pre-validated and ready to run
-- **No Manual Intervention** — no need to SSH in or dig up old scripts
-- **Resilience as Default** — pipelines fail gracefully, keeping environments stable
+- **Transactional Safety** — Harness rolls back failed migrations automatically at the DB level
+- **Auto-Repair** — Harness cleans up the schema history table so subsequent runs aren't blocked
+- **Resilience as Default** — Pipelines fail gracefully, keeping environments stable
 
 ---
 
@@ -228,8 +224,6 @@ DROP TABLE users;
 3. Execution **fails** with: `dropping data is not permitted`
 4. The database is never touched
 
-> **Note:** The OPA policy works identically for both Liquibase and Flyway — Harness passes the same `input.sqlStatements` payload to the policy engine regardless of the migration tool.
-
 ### Value Callouts
 
 - **Guardrails, Not Roadblocks** — issues surface early without slowing compliant developers
@@ -278,7 +272,7 @@ You'll promote a database change through Dev → QA → Production using a singl
 
 1. Click **Save** to finalize the multi-stage pipeline
 2. In Git, **remove** any breaking migration files from previous labs:
-   - Delete `flyway/migrations/V3__add_duplicate_id_column.sql` and `flyway/migrations/U3__undo_add_duplicate_id_column.sql` (from Lab 2)
+   - Delete `flyway/migrations/V3__add_duplicate_id_column.sql` (from Lab 2)
    - Delete `flyway/migrations/V4__drop_users_table.sql` (from Lab 3)
 3. Commit and push to `main` to kick off the pipeline
 4. Observe the deployment through all 3 stages:
