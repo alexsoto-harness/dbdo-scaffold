@@ -84,3 +84,179 @@ spec:
         - name: init-db
           configMap:
             name: init-db-schema
+
+############################
+# CLI-POSTGRES-DB2
+############################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cli-postgres-db2
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: cli-postgres-db2
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cli-postgres-db2
+spec:
+  serviceName: "cli-postgres-db2"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cli-postgres-db2
+  template:
+    metadata:
+      labels:
+        app: cli-postgres-db2
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16.10
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_USER
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "secretpass"
+            - name: POSTGRES_DB
+              value: "mydb"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cli-init-schema-db2
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: init-schema
+          image: postgres:16.10
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h cli-postgres-db2 -U admin; do sleep 2; done &&
+              psql -h cli-postgres-db2 -U admin -d mydb -f /docker-entrypoint-initdb.d/init.sql
+          env:
+            - name: PGPASSWORD
+              value: "secretpass"
+          volumeMounts:
+            - name: init-db
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-db
+          configMap:
+            name: init-db-schema
+
+############################
+# CLI-POSTGRES-DB3
+############################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cli-postgres-db3
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: cli-postgres-db3
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cli-postgres-db3
+spec:
+  serviceName: "cli-postgres-db3"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cli-postgres-db3
+  template:
+    metadata:
+      labels:
+        app: cli-postgres-db3
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16.10
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_USER
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "secretpass"
+            - name: POSTGRES_DB
+              value: "mydb"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cli-init-schema-db3
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: init-schema
+          image: postgres:16.10
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h cli-postgres-db3 -U admin; do sleep 2; done &&
+              psql -h cli-postgres-db3 -U admin -d mydb -f /docker-entrypoint-initdb.d/init.sql
+          env:
+            - name: PGPASSWORD
+              value: "secretpass"
+          volumeMounts:
+            - name: init-db
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-db
+          configMap:
+            name: init-db-schema
